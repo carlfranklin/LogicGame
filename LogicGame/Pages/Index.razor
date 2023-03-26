@@ -1,0 +1,31 @@
+﻿@page "/"
+
+<table>
+    @foreach (var list in ImageNames)
+    {
+        <tr>
+            <td>
+                <img @onmouseover="() => ShowImageName(list[0].Name)" alt="@list[0].Name" src="images/@list[0].FileName" />
+            </td>
+            <td>
+                <img @onmouseover="() => ShowImageName(list[1].Name)" alt="@list[1].Name" src="images/@list[1].FileName" />
+            </td>
+            <td>
+                <img @onmouseover="() => ShowImageName(list[2].Name)" alt="@list[2].Name" src="images/@list[2].FileName" />
+            </td>
+            <td>
+                <img @onmouseover="() => ShowImageName(list[3].Name)" alt="@list[3].Name" src="images/@list[3].FileName" />
+            </td>
+        </tr>
+    }
+</table>
+
+<button @onclick="GenerateSameColumnClue">Generate Same Column Clue</button>
+<br />
+<button @onclick="GenerateNextToClue">Generate Next-To Column Clue</button>
+<br />
+<button @onclick="GenerateBetweenClue">Generate Between Columns Clue</button>
+<br />
+<button @onclick="GenerateThisNotThatClue">Generate This but Not That Clue</button>
+<br />
+<p>@Message</p>
