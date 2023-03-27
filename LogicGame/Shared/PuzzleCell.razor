@@ -1,6 +1,6 @@
 ﻿@if (Cell.IsSolved())
 {
-    <img @onmouseover="() => ShowImageName(Cell.Name)"
+    <img @onmouseover="() => ShowImageName(Cell)"
          alt="@Cell.Name"
          src="images/@Cell.FileName"
          style="width:@BigCellWidth;border-width:1px;border-style:solid;" />
@@ -15,13 +15,15 @@ else
                     <img @oncontextmenu="@(() => ShowOrHide(new CustomMouseEventArgs(Cell, 0)))"
                          @oncontextmenu:preventDefault="true"
                          @onclick="() => ShowImage(Cell, 0)"
-                         src="@ImageName(Cell, 0)"
+                         @onmouseover="() => ShowImageName(Cell, 0)"
+                         src="@ImageFileName(Cell, 0)"
                          style="width:@SmallCellWidth;" />
                 }
                 else
                 {
                     <div @oncontextmenu="@(() => ShowOrHide(new CustomMouseEventArgs(Cell, 0)))"
                          @oncontextmenu:preventDefault="true"
+                         @onmouseover="() => ShowImageName(Cell, 0)"
                          style="width:@SmallCellWidth;height:@SmallCellWidth;background-color:black;" />
                 }
             </td>
@@ -31,14 +33,16 @@ else
                     <img @oncontextmenu="@(() => ShowOrHide(new CustomMouseEventArgs(Cell, 1)))"
                          @oncontextmenu:preventDefault="true"
                          @onclick="() => ShowImage(Cell, 1)"
-                         src="@ImageName(Cell, 1)"
+                         @onmouseover="() => ShowImageName(Cell, 1)"
+                         src="@ImageFileName(Cell, 1)"
                          style="width:@SmallCellWidth;" />
                 }
                 else
                 {
                     <div @oncontextmenu="@(() => ShowOrHide(new CustomMouseEventArgs(Cell, 1)))"
-                        @oncontextmenu:preventDefault="true"
-                        style="width:@SmallCellWidth;height:@SmallCellWidth;background-color:black;" />
+                         @oncontextmenu:preventDefault="true"
+                         @onmouseover="() => ShowImageName(Cell, 1)"
+                         style="width:@SmallCellWidth;height:@SmallCellWidth;background-color:black;" />
                 }
             </td>
         </tr>
@@ -49,13 +53,15 @@ else
                     <img @oncontextmenu="@(() => ShowOrHide(new CustomMouseEventArgs(Cell, 2)))"
                          @oncontextmenu:preventDefault="true"
                          @onclick="() => ShowImage(Cell, 2)"
-                         src="@ImageName(Cell, 2)"
+                         @onmouseover="() => ShowImageName(Cell, 2)"
+                         src="@ImageFileName(Cell, 2)"
                          style="width:@SmallCellWidth;" />
                 }
                 else
                 {
                     <div @oncontextmenu="@(() => ShowOrHide(new CustomMouseEventArgs(Cell, 2)))"
                          @oncontextmenu:preventDefault="true"
+                         @onmouseover="() => ShowImageName(Cell, 2)"
                          style="width:@SmallCellWidth;height:@SmallCellWidth;background-color:black;" />
                 }
             </td>
@@ -65,13 +71,15 @@ else
                     <img @oncontextmenu="@(() => ShowOrHide(new CustomMouseEventArgs(Cell, 3)))"
                          @oncontextmenu:preventDefault="true"
                          @onclick="() => ShowImage(Cell, 3)"
-                         src="@ImageName(Cell, 3)"
+                         @onmouseover="() => ShowImageName(Cell, 3)"
+                         src="@ImageFileName(Cell, 3)"
                          style="width:@SmallCellWidth;" />
                 }
                 else
                 {
                     <div @oncontextmenu="@(() => ShowOrHide(new CustomMouseEventArgs(Cell, 3)))"
-                 @oncontextmenu:preventDefault="true"
+                         @oncontextmenu:preventDefault="true"
+                         @onmouseover="() => ShowImageName(Cell, 3)"
                          style="width:@SmallCellWidth;height:@SmallCellWidth;background-color:black;" />
                 }
             </td>

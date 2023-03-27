@@ -1,0 +1,42 @@
+﻿<div>
+    The goal of this game is to determine which pictures belong in which cells.
+    <br />
+    <br />
+    Cells that are "solved" show a full-size picture. The game starts with three solved cells.
+    <br />
+    <br />
+    Cells that are not solved shows a 4x4 grid of all the possible pictures.
+    <br />
+    <br />
+    Your job is to read the clues and solve the puzzle.
+    <br />
+    <br />
+    You can remove a small picture in any unsolved cell by right-clicking on it.
+    <br />
+    <br />
+    You can bring it back by right-clicking on the black square where the small picture was.
+    <br />
+    <br />
+    To solve a cell, left-click on the picture you believe should be in the cell.
+    <br />
+    <br />
+    This is the first version of the game. It is not yet complete. As of now, you can only
+    remove possibile pictures (right-click) if the picture is NOT the solution.
+    <br />
+    <br />
+    You can also only select a picture (left-click) if it IS the solution. In the future,
+    we will let you make mistakes and check it. That requires state and undo, which is beyond
+    the scope of the first version.
+    <br />
+    <br />
+
+</div>
+<button @onclick="Close">Close</button>
+
+@code {
+
+    [CascadingParameter]
+    BlazoredModalInstance BlazoredModal { get; set; } = default!;
+
+    private async Task Close() => await BlazoredModal.CloseAsync();
+}

@@ -1,18 +1,41 @@
-﻿using Microsoft.AspNetCore.Components;
+﻿using LogicGame.Shared;
+using Microsoft.AspNetCore.Components;
 using System.Security.Cryptography;
 
 namespace LogicGame.Pages;
 
 public partial class Index : ComponentBase
 {
-    public string Message { get; set; } = "Logic Puzzle";
+    public string Message { get; set; } = "Carl Franklin's Logic Puzzle";
     public string ImageHint { get; set; } = "Hover over an image to see a description";
     public List<List<Cell>> SortedCells { get; set; } = new List<List<Cell>>();
     public List<List<Cell>> Cells { get; set; } = new List<List<Cell>>();
-    public List<Hint> Hints { get; set; } = new List<Hint>();  
+    public List<Hint> Hints { get; set; } = new List<Hint>();
+    public List<Hint> FilteredHints => Hints.Where(i => i.HintText.ToLower().Contains(HintFilter.ToLower())).ToList();
 
     public string BigCellWidth = "100px";
     public string SmallCellWidth = "50px";
+    public string HintFilter = string.Empty;
+
+    [CascadingParameter]
+    public IModalService Modal { get; set; } = default!;
+
+    public void ClearHintFilter()
+    {
+        HintFilter = "";
+    }
+
+    public async Task ShowHelp()
+    {
+        ModalOptions options = new ModalOptions()
+        {
+            DisableBackgroundCancel = true,
+            Size = ModalSize.Large,
+            Position = ModalPosition.Middle
+        };
+        var modal = Modal.Show<HelpModal>("Logic Puzzle Help", options);
+        var result = await modal.Result;
+    }
 
     public void OnCellChanged(Cell cell)
     {
@@ -52,14 +75,14 @@ public partial class Index : ComponentBase
         hint.Cells.Add(shortList.Last());
 
         var match = (from x in Hints
-                     where x.Type == HintType.Between
+                     where x.Type == HintType.ThisNotThat
                      && x.ContainsCells(hint.Cells)
                      select x).FirstOrDefault();
 
         if (match != null) return null;
 
         var firstItem = hint.Cells[0].Name;
-        
+
         firstItem = firstItem.Substring(0, 1).ToUpper() + firstItem.Substring(1);
 
         hint.HintText = $"{firstItem} " +
@@ -165,7 +188,7 @@ public partial class Index : ComponentBase
         firstItem = firstItem.Substring(0, 1).ToUpper() + firstItem.Substring(1);
 
         hint.HintText = $"{firstItem} " +
-            $"is in the same column as {hint.Cells[1].Name}";;
+            $"is in the same column as {hint.Cells[1].Name}"; ;
 
         return hint;
     }
@@ -219,7 +242,7 @@ public partial class Index : ComponentBase
                 {
                     count0.First().Solve();
                 }
-                
+
                 var count1 = (from x in notSolved where x.Possibilities[1] == true select x).ToList();
                 if (count1.Count == 1)
                 {
@@ -259,7 +282,7 @@ public partial class Index : ComponentBase
 
     public void GenerateHints()
     {
-        while(Hints.Count < 20) 
+        while (Hints.Count < 20)
         {
             var hint1 = GenerateSameColumnClue();
             if (hint1 != null) { Hints.Add(hint1); }
@@ -273,7 +296,7 @@ public partial class Index : ComponentBase
             var hint4 = GenerateThisNotThatClue();
             if (hint4 != null) { Hints.Add(hint4); }
 
-            if (hint1 == null && hint2 == null && hint3 == null)
+            if (hint1 == null && hint2 == null && hint3 == null && hint4 == null)
                 break;
         }
         var rnd = new Random(Hints.GetHashCode());

@@ -25,12 +25,35 @@ public partial class PuzzleCell: ComponentBase
     [Parameter]
     public string SmallCellWidth { get; set; }
 
-    public async Task ShowImageName(string imageName)
+    public async Task ShowImageName(Cell cell, int index = -1)
     {
-        await ImageHintChanged.InvokeAsync(imageName);
+        if (index == -1)
+            await ImageHintChanged.InvokeAsync(cell.Name);
+        else
+        {
+            var name = ImageName(cell, index);
+            await ImageHintChanged.InvokeAsync(name);
+        }
     }
 
-    protected string ImageName(Cell cell, int column)
+    protected string ImageName(Cell cell, int index)
+    {
+        // find this cell's parent list in Sorted Cells
+        var imagesRows = (from x in SortedCells where x.Contains(cell) select x).ToList();
+
+        // Get the row index
+        var rowIndex = SortedCells.IndexOf(imagesRows.First());
+
+        // Get the cells in the un-sorted list at this index
+        var cells = Cells[rowIndex];
+
+        // use the column to retrieve the original image file name
+        string result = cells[index].Name;
+
+        return result;
+    }
+
+    protected string ImageFileName(Cell cell, int index)
     {
         // find this cell's parent list in Sorted Cells
         var imagesRows = (from x in SortedCells where x.Contains(cell) select x).ToList();
@@ -42,7 +65,7 @@ public partial class PuzzleCell: ComponentBase
         var cells = Cells[rowIndex];
 
         // use the column to retrieve the original image file name
-        string result = $"images/{cells[column].FileName}";
+        string result = $"images/{cells[index].FileName}";
 
         return result;
     }
@@ -55,7 +78,7 @@ public partial class PuzzleCell: ComponentBase
         if (cell.Possibilities[args.ImageIndex])
         {
             // Make sure this is NOT the solution image
-            string imageName = ImageName(cell, args.ImageIndex);
+            string imageName = ImageFileName(cell, args.ImageIndex);
             if (imageName.Contains(cell.FileName))
                 return;
         }

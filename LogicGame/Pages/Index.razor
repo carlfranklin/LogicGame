@@ -1,7 +1,10 @@
 ﻿@page "/"
 <h3>@Message</h3>
 <p>@ImageHint</p>
-<table style="float:left;">
+<button @onclick="ShowHelp" class="btn btn-primary">What is this?</button>
+<br/>
+<br />
+<table style="float:left;margin-right:20px;">
     @foreach (var cells in SortedCells)
     {
         <tr>
@@ -44,9 +47,15 @@
         </tr>
     }
 </table>
-<div style="float:right;">
-    @foreach (var hint in Hints)
+<div>
+    <span style="font-weight:bold;">Hint Filter: </span>
+    <input @bind="HintFilter" @bind:event=oninput />
+    <button @onclick="ClearHintFilter">x</button>
+    @foreach (var hint in FilteredHints)
     {
-        <div>@hint.HintText</div>
+        <div>
+            <input type="checkbox" @bind=hint.Checked />
+            @hint.HintText
+        </div>
     }
 </div>
