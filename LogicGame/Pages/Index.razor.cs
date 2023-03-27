@@ -323,32 +323,40 @@ public partial class Index : ComponentBase
 
     protected override void OnInitialized()
     {
-        var row1 = new List<Cell>();
-        row1.Add(new Cell("Carl", "carl.jpg", 0));
-        row1.Add(new Cell("Scott", "scott.jpg", 1));
-        row1.Add(new Cell("Richard", "richard.jpg", 2));
-        row1.Add(new Cell("Patrick", "patrick.jpg", 3));
+        var row1 = new List<Cell>
+        {
+            new Cell("Carl", "carl.jpg", 0),
+            new Cell("Scott", "scott.jpg", 1),
+            new Cell("Richard", "richard.jpg", 2),
+            new Cell("Patrick", "patrick.jpg", 3)
+        };
         Cells.Add(row1);
 
-        var row2 = new List<Cell>();
-        row2.Add(new Cell("the wine", "wine.jpg", 0));
-        row2.Add(new Cell("the beer", "beer.jpg", 1));
-        row2.Add(new Cell("the coffee", "coffee.jpg", 2));
-        row2.Add(new Cell("the tea", "tea.jpg", 3));
+        var row2 = new List<Cell>
+        {
+            new Cell("the wine", "wine.jpg", 0),
+            new Cell("the beer", "beer.jpg", 1),
+            new Cell("the coffee", "coffee.jpg", 2),
+            new Cell("the tea", "tea.jpg", 3)
+        };
         Cells.Add(row2);
 
-        var row3 = new List<Cell>();
-        row3.Add(new Cell("the puppy", "puppy.jpg", 0));
-        row3.Add(new Cell("the kitten", "kitten.jpg", 1));
-        row3.Add(new Cell("the monkey", "monkey.jpg", 2));
-        row3.Add(new Cell("the bear", "bear.jpg", 3));
+        var row3 = new List<Cell>
+        {
+            new Cell("the puppy", "puppy.jpg", 0),
+            new Cell("the kitten", "kitten.jpg", 1),
+            new Cell("the monkey", "monkey.jpg", 2),
+            new Cell("the bear", "bear.jpg", 3)
+        };
         Cells.Add(row3);
 
-        var row4 = new List<Cell>();
-        row4.Add(new Cell("the burger", "burger.jpg", 0));
-        row4.Add(new Cell("the taco", "taco.jpg", 1));
-        row4.Add(new Cell("the pizza", "pizza.jpg", 2));
-        row4.Add(new Cell("the sushi", "sushi.jpg", 3));
+        var row4 = new List<Cell>
+        {
+            new Cell("the burger", "burger.jpg", 0),
+            new Cell("the taco", "taco.jpg", 1),
+            new Cell("the pizza", "pizza.jpg", 2),
+            new Cell("the sushi", "sushi.jpg", 3)
+        };
         Cells.Add(row4);
 
         ShuffleCells();
