@@ -1,31 +1,52 @@
 ﻿@page "/"
-
-<table>
-    @foreach (var list in ImageNames)
+<h3>@Message</h3>
+<p>@ImageHint</p>
+<table style="float:left;">
+    @foreach (var cells in SortedCells)
     {
         <tr>
             <td>
-                <img @onmouseover="() => ShowImageName(list[0].Name)" alt="@list[0].Name" src="images/@list[0].FileName" />
+                <PuzzleCell BigCellWidth="@BigCellWidth"
+                        Cell="@cells[0]"
+                        Cells="@Cells"
+                        SmallCellWidth="@SmallCellWidth"
+                        SortedCells="@SortedCells"
+                        CellChanged="OnCellChanged"
+                        ImageHintChanged="OnImageHintChanged"/>
             </td>
             <td>
-                <img @onmouseover="() => ShowImageName(list[1].Name)" alt="@list[1].Name" src="images/@list[1].FileName" />
+                <PuzzleCell BigCellWidth="@BigCellWidth"
+                        Cell="@cells[1]"
+                        Cells="@Cells"
+                        SmallCellWidth="@SmallCellWidth"
+                        SortedCells="@SortedCells"
+                        CellChanged="OnCellChanged"
+                        ImageHintChanged="OnImageHintChanged"/>
             </td>
             <td>
-                <img @onmouseover="() => ShowImageName(list[2].Name)" alt="@list[2].Name" src="images/@list[2].FileName" />
+                <PuzzleCell BigCellWidth="@BigCellWidth"
+                        Cell="@cells[2]"
+                        Cells="@Cells"
+                        SmallCellWidth="@SmallCellWidth"
+                        SortedCells="@SortedCells"
+                        CellChanged="OnCellChanged"
+                        ImageHintChanged="OnImageHintChanged"/>
             </td>
             <td>
-                <img @onmouseover="() => ShowImageName(list[3].Name)" alt="@list[3].Name" src="images/@list[3].FileName" />
+                <PuzzleCell BigCellWidth="@BigCellWidth"
+                        Cell="@cells[3]"
+                        Cells="@Cells"
+                        SmallCellWidth="@SmallCellWidth"
+                        SortedCells="@SortedCells"
+                        CellChanged="OnCellChanged"
+                        ImageHintChanged="OnImageHintChanged"/>
             </td>
         </tr>
     }
 </table>
-
-<button @onclick="GenerateSameColumnClue">Generate Same Column Clue</button>
-<br />
-<button @onclick="GenerateNextToClue">Generate Next-To Column Clue</button>
-<br />
-<button @onclick="GenerateBetweenClue">Generate Between Columns Clue</button>
-<br />
-<button @onclick="GenerateThisNotThatClue">Generate This but Not That Clue</button>
-<br />
-<p>@Message</p>
+<div style="float:right;">
+    @foreach (var hint in Hints)
+    {
+        <div>@hint.HintText</div>
+    }
+</div>
