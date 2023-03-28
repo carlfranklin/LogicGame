@@ -45,7 +45,7 @@ public partial class Index : ComponentBase
     /// <summary>
     /// Cell size (big and small). You can control the size of the UI with these
     /// </summary>
-    protected string BigCellWidth = "101px";
+    protected string BigCellWidth = "102px";
     protected string SmallCellWidth = "50px";
 
     /// <summary>
