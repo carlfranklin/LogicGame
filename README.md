@@ -10,11 +10,11 @@ If you prefer a video tutorial, watch [BlazorTrain episode 95: Building a Logic 
 
 This is what it looks like when you first run the app:
 
-![image-20230327211258194](images/image-20230327211258194.png)
+![image-20230328123449184](images/image-20230328123449184.png)
 
 When you select the **What is this?** button, you'll see this help dialog:
 
-![image-20230327211411261](images/image-20230327211411261.png)
+![image-20230328123506965](images/image-20230328123506965.png)
 
 Before you continue with the implementation, play the game a few times until it clicks. If you get stuck, watch the [BlazorTrain video](https://youtu.be/JHH6Xm7xyao).
 
@@ -91,9 +91,37 @@ table, tr, td {
     border-collapse: collapse;
     padding: 0px;
 }
+
+.mainTable {
+    float: left;
+    margin-right: 20px;
+}
+
+.separatorSpan {
+    width: 12px;
+}
+
+.boldSpan {
+    font-weight: bold;
+}
+
+canvas {
+    z-index: 100;
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+    user-select: none;
+    background-color: transparent;
+}
+
+.solvedCell {
+    border-width: 1px;
+    border-style: solid;
+}
 ```
 
-In *_Host.cshtml*, change the render mode to `Server`:
+In *Pages/_Host.cshtml*, change the render mode to `Server`:
 
 ```xml
 <component type="typeof(HeadOutlet)" render-mode="Server" />
@@ -241,10 +269,8 @@ namespace LogicGame.Pages;
 
 public partial class Index : ComponentBase
 {
-    protected string Message { get; set; } = "Carl Franklin's Logic Puzzle";
-    protected string ImageHint { get; set; } = "Hover over an image to see a description";
-    protected List<List<Cell>> SortedCells { get; set; } = new List<List<Cell>>();
     protected List<List<Cell>> Cells { get; set; } = new List<List<Cell>>();
+    protected List<List<Cell>> SortedCells { get; set; } = new List<List<Cell>>();
 
     protected override async Task OnInitializedAsync()
     {
@@ -347,12 +373,15 @@ protected async Task ShuffleCells()
 }
 ```
 
-OK, the next thing we need to add is the `GetRandom()` method.
+We need the `GetRandom()` method to return a unique random number.
+
+Add this:
 
 ```c#
 protected int GetRandom(int[] notThese = null)
 {
-    // Get a random number with 1 as the lower bound and SortedCells count (typically 4) as the upper bound
+    // Get a random number with 1 as the lower bound and SortedCells 
+    // count (typically 4) as the upper bound
     int result = RandomNumberGenerator.GetInt32(1, SortedCells.Count + 1);
 
     if (notThese == null)
@@ -370,7 +399,7 @@ protected int GetRandom(int[] notThese = null)
 
 The optional `int` array you can pass to `GetRandom()` is critical to picking unique random cells to display.
 
-You can express "pick a random number between 1 and 4 (including 4) but not if it's one of the numbers in this array."
+With this code you can express "pick a random number between 1 and 4 (including 4) but not if it's one of the numbers in this array."
 
 Let's add a couple lines of code after line 114:
 
@@ -382,9 +411,9 @@ var firstCell = firstRow.First();
 
 This code looks at the first row and the first cell in the first row of the SortedCells list.
 
-![image-20230327222444114](images/image-20230327222444114.png)
+Put  a breakpoint on line 116 and run the app.
 
-Put  a breakpoint on line 118 and run the app.
+![image-20230328122803724](images/image-20230328122803724.png)
 
 Pull up the immediate window and type:
 
@@ -392,7 +421,7 @@ Pull up the immediate window and type:
 ? firstCell.Name
 ```
 
-Notice that it is not "Carl", which is the first cell in the first row we added to `Cells`, our non-shuffled list:
+Notice that it is most likely not "Carl", which is the first cell in the first row we added to `Cells`, our non-shuffled list:
 
 ```c#
     var row1 = new List<Cell>
@@ -411,7 +440,7 @@ There's more code, but this is enough to get us started.
 
 The PuzzleCell component represents one of the 16 cells in the game (4 rows x 4 columns).
 
-The goal in design is to encapsulate all the code and markup associated with a particular cell, and to leave all of the application scoped markup and code in the containing page (*Index.razor* and *Index.razor.cs*)
+The design goal for this component is to encapsulate all the code and markup associated with a particular cell, and to leave all of the application scoped markup and code in the containing page (*Index.razor* and *Index.razor.cs*)
 
 Add the following files to the *Shared* folder:
 
@@ -422,8 +451,9 @@ Add the following files to the *Shared* folder:
 {
     <img @onmouseover="() => ShowImageName(Cell)"
          alt="@Cell.Name"
+         class="solvedCell"
          src="images/@Cell.FileName"
-         style="width:@BigCellWidth;border-width:1px;border-style:solid;" />
+         style="width:@BigCellWidth;" />
 }
 else
 {
@@ -433,9 +463,9 @@ else
                 @if (Cell.Possibilities[0])
                 {
                     <img @oncontextmenu="@(() => ShowOrHide(
-                            new CustomMouseEventArgs(Cell, 0)))"
+                            new CellMouseEventArgs(Cell, 0)))"
                          @oncontextmenu:preventDefault="true"
-                         @onclick="() => ShowImage(Cell, 0)"
+                         @onclick="() => SolveCellAndNotify(Cell, 0)"
                          @onmouseover="() => ShowImageName(Cell, 0)"
                          src="@ImageFileName(Cell, 0)"
                          style="width:@SmallCellWidth;" />
@@ -443,7 +473,7 @@ else
                 else
                 {
                     <div @oncontextmenu="@(() => ShowOrHide(
-                            new CustomMouseEventArgs(Cell, 0)))"
+                            new CellMouseEventArgs(Cell, 0)))"
                          @oncontextmenu:preventDefault="true"
                          @onmouseover="() => ShowImageName(Cell, 0)"
                          style="width:@SmallCellWidth;height:@SmallCellWidth;
@@ -454,9 +484,9 @@ else
                 @if (Cell.Possibilities[1])
                 {
                     <img @oncontextmenu="@(() => ShowOrHide(
-                            new CustomMouseEventArgs(Cell, 1)))"
+                            new CellMouseEventArgs(Cell, 1)))"
                          @oncontextmenu:preventDefault="true"
-                         @onclick="() => ShowImage(Cell, 1)"
+                         @onclick="() => SolveCellAndNotify(Cell, 1)"
                          @onmouseover="() => ShowImageName(Cell, 1)"
                          src="@ImageFileName(Cell, 1)"
                          style="width:@SmallCellWidth;" />
@@ -464,7 +494,7 @@ else
                 else
                 {
                     <div @oncontextmenu="@(() => ShowOrHide(
-                            new CustomMouseEventArgs(Cell, 1)))"
+                            new CellMouseEventArgs(Cell, 1)))"
                          @oncontextmenu:preventDefault="true"
                          @onmouseover="() => ShowImageName(Cell, 1)"
                          style="width:@SmallCellWidth;height:@SmallCellWidth;
@@ -477,9 +507,9 @@ else
                 @if (Cell.Possibilities[2])
                 {
                     <img @oncontextmenu="@(() => ShowOrHide(
-                            new CustomMouseEventArgs(Cell, 2)))"
+                            new CellMouseEventArgs(Cell, 2)))"
                          @oncontextmenu:preventDefault="true"
-                         @onclick="() => ShowImage(Cell, 2)"
+                         @onclick="() => SolveCellAndNotify(Cell, 2)"
                          @onmouseover="() => ShowImageName(Cell, 2)"
                          src="@ImageFileName(Cell, 2)"
                          style="width:@SmallCellWidth;" />
@@ -487,7 +517,7 @@ else
                 else
                 {
                     <div @oncontextmenu="@(() => ShowOrHide(
-                            new CustomMouseEventArgs(Cell, 2)))"
+                            new CellMouseEventArgs(Cell, 2)))"
                          @oncontextmenu:preventDefault="true"
                          @onmouseover="() => ShowImageName(Cell, 2)"
                          style="width:@SmallCellWidth;height:@SmallCellWidth;
@@ -498,9 +528,9 @@ else
                 @if (Cell.Possibilities[3])
                 {
                     <img @oncontextmenu="@(() => ShowOrHide(
-                            new CustomMouseEventArgs(Cell, 3)))"
+                            new CellMouseEventArgs(Cell, 3)))"
                          @oncontextmenu:preventDefault="true"
-                         @onclick="() => ShowImage(Cell, 3)"
+                         @onclick="() => SolveCellAndNotify(Cell, 3)"
                          @onmouseover="() => ShowImageName(Cell, 3)"
                          src="@ImageFileName(Cell, 3)"
                          style="width:@SmallCellWidth;" />
@@ -508,7 +538,7 @@ else
                 else
                 {
                     <div @oncontextmenu="@(() => ShowOrHide(
-                            new CustomMouseEventArgs(Cell, 3)))"
+                            new CellMouseEventArgs(Cell, 3)))"
                          @oncontextmenu:preventDefault="true"
                          @onmouseover="() => ShowImageName(Cell, 3)"
                          style="width:@SmallCellWidth;height:@SmallCellWidth;
@@ -524,9 +554,9 @@ Before we even get this working, take a look at the markup here.
 
 If the puzzle is solved, we simply show the image.
 
-Otherwise, we're creating a table WITHIN the cell containing 4 sub cells, one for each possible image.
+Otherwise, we're creating a table WITHIN the cell containing 4 sub cells, one for each possible image, and only showing the possible solutions (images) at any time based on the state of the rest of the cells.
 
-Remember that a cell is in a particular category: people, beverages, pets, or food. So, each cell can be one of those four items.
+Remember that a cell is in a particular category: **people**, **beverages**, **pets**, or **food**. So, each cell can be one of those four items.
 
 Our code will have helper methods to handle the state of each of these images (shown or not shown), which requires getting their names and filenames.
 
@@ -736,7 +766,7 @@ There's a lot to unpack here. The comments should be self-explanatory. Read thro
 
 ### Application Markup and Code
 
-Now we can focus on the application code (*Index.razor* and *Index.razor.cs*) that handles game layout and logic.
+Now we can focus on the application code that handles game layout and logic.
 
 Add the following class:
 
@@ -817,7 +847,7 @@ public enum HintType
 
 We need JavaScript to set the focus to the hint filter input tag and also for the confetti flourish at the end which I got from https://www.codehim.com/animation-effects/javascript-confetti-explosion-effect/
 
-Add the following script tag to the *_Host.cshtml* file at line 34:
+Add the following script tag to the *Pages/_Host.cshtml* file at line 33:
 
 ```java
 <script>
@@ -956,7 +986,7 @@ Add the following script tag to the *_Host.cshtml* file at line 34:
 </script>
 ```
 
-Create the Help Modal. Add the following file to the *Shared* folder:
+Create the Help Modal component. Add the following file to the *Shared* folder:
 
 *HelpModal.razor*:
 
@@ -1029,15 +1059,16 @@ public partial class Index : ComponentBase
     /// </summary>
     protected string ImageHint { get; set; } = "Hover over an image to see a description";
 
-    /// <summary>
-    /// The sorted or shuffled cells
-    /// </summary>
-    protected List<List<Cell>> SortedCells { get; set; } = new List<List<Cell>>();
-
+    
     /// <summary>
     /// The un-sorted cells in the original order
     /// </summary>
     protected List<List<Cell>> Cells { get; set; } = new List<List<Cell>>();
+    
+    /// <summary>
+    /// The sorted or shuffled cells
+    /// </summary>
+    protected List<List<Cell>> SortedCells { get; set; } = new List<List<Cell>>();
 
     /// <summary>
     /// Hints, generated by the app code
@@ -1052,12 +1083,13 @@ public partial class Index : ComponentBase
     /// <summary>
     /// Filtered hints, bound to the HintFilter string
     /// </summary>
-    protected List<Hint> FilteredHints => Hints.Where(i => i.HintText.ToLower().Contains(HintFilter.ToLower())).ToList();
+    protected List<Hint> FilteredHints => 
+        Hints.Where(i => i.HintText.ToLower().Contains(HintFilter.ToLower())).ToList();
 
     /// <summary>
     /// Cell size (big and small). You can control the size of the UI with these
     /// </summary>
-    protected string BigCellWidth = "101px";
+    protected string BigCellWidth = "102px";
     protected string SmallCellWidth = "50px";
 
     /// <summary>
@@ -1630,7 +1662,7 @@ Replace *Index.razor* with the following:
 <br/>
 <br />
 <p>@ImageHint</p>
-<table style="float:left;margin-right:20px;background-color:red;">
+<table class="mainTable">
     @foreach (var cells in SortedCells)
     {
         <tr>
@@ -1644,6 +1676,9 @@ Replace *Index.razor* with the following:
                         ImageHintChanged="OnImageHintChanged"/>
             </td>
             <td>
+                <span class="separatorSpan" style="height:@BigCellWidth;"></span>
+            </td>
+            <td>
                 <PuzzleCell BigCellWidth="@BigCellWidth"
                         Cell="@cells[1]"
                         Cells="@Cells"
@@ -1653,6 +1688,9 @@ Replace *Index.razor* with the following:
                         ImageHintChanged="OnImageHintChanged"/>
             </td>
             <td>
+                <span class="separatorSpan" style="height:@BigCellWidth;"></span>
+            </td>
+            <td>
                 <PuzzleCell BigCellWidth="@BigCellWidth"
                         Cell="@cells[2]"
                         Cells="@Cells"
@@ -1660,6 +1698,9 @@ Replace *Index.razor* with the following:
                         SortedCells="@SortedCells"
                         CellChanged="OnCellChanged"
                         ImageHintChanged="OnImageHintChanged"/>
+            </td>
+            <td>
+                <span class="separatorSpan" style="height:@BigCellWidth;"></span>
             </td>
             <td>
                 <PuzzleCell BigCellWidth="@BigCellWidth"
@@ -1674,9 +1715,9 @@ Replace *Index.razor* with the following:
     }
 </table>
 <div>
-    <span style="font-weight:bold;">Hint Filter: </span>
+    <span class="boldSpan">Hint Filter: </span>
     <input id="hintFilter" @bind="HintFilter" @bind:event=oninput />
-    <canvas id="canvas" style="z-index:100;position:absolute;top:0;left:0;pointer-events:none; user-select: none;background-color:transparent; display:@CanvasDisplay;" />
+    <canvas id="canvas" style="display:@CanvasDisplay;" />
     <button @onclick="ClearHintFilter">x</button>
     @foreach (var hint in FilteredHints)
     {
@@ -1687,4 +1728,6 @@ Replace *Index.razor* with the following:
     }
 </div>
 ```
+
+Run the app to test it.
 
