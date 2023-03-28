@@ -81,6 +81,28 @@ Wrap the markup *App.razor* in a `<CascadingBlazoredModal>` like so:
 </CascadingBlazoredModal>
 ```
 
+Add the following to *wwwroot/css/site.css*:
+
+```css
+table, tr, td {
+    border-width: 1px;
+    border-style: solid;
+    border-spacing: 0;
+    border-collapse: collapse;
+    padding: 0px;
+}
+```
+
+In *_Host.cshtml*, change the render mode to `Server`:
+
+```xml
+<component type="typeof(HeadOutlet)" render-mode="Server" />
+```
+
+```xml
+<component type="typeof(App)" render-mode="Server" />
+```
+
 ### Add Models and Images
 
 Add the following classes:
