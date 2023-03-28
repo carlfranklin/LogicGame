@@ -2,10 +2,12 @@
 
 namespace LogicGame;
 
-public class CustomMouseEventArgs : MouseEventArgs
+/// <summary>
+/// Combines a cell and an image index
+/// </summary>
+public class CellMouseEventArgs : MouseEventArgs
 {
-
-    public CustomMouseEventArgs(Cell cell, int imageIndex)
+    public CellMouseEventArgs(Cell cell, int imageIndex)
     {
         Cell = cell;
         ImageIndex = imageIndex;

@@ -12,37 +12,43 @@ else
             <td>
                 @if (Cell.Possibilities[0])
                 {
-                    <img @oncontextmenu="@(() => ShowOrHide(new CustomMouseEventArgs(Cell, 0)))"
+                    <img @oncontextmenu="@(() => ShowOrHide(
+                            new CellMouseEventArgs(Cell, 0)))"
                          @oncontextmenu:preventDefault="true"
-                         @onclick="() => ShowImage(Cell, 0)"
+                         @onclick="() => SolveCellAndNotify(Cell, 0)"
                          @onmouseover="() => ShowImageName(Cell, 0)"
                          src="@ImageFileName(Cell, 0)"
                          style="width:@SmallCellWidth;" />
                 }
                 else
                 {
-                    <div @oncontextmenu="@(() => ShowOrHide(new CustomMouseEventArgs(Cell, 0)))"
+                    <div @oncontextmenu="@(() => ShowOrHide(
+                            new CellMouseEventArgs(Cell, 0)))"
                          @oncontextmenu:preventDefault="true"
                          @onmouseover="() => ShowImageName(Cell, 0)"
-                         style="width:@SmallCellWidth;height:@SmallCellWidth;background-color:black;" />
+                         style="width:@SmallCellWidth;height:@SmallCellWidth;
+                            background-color:black;" />
                 }
             </td>
             <td>
                 @if (Cell.Possibilities[1])
                 {
-                    <img @oncontextmenu="@(() => ShowOrHide(new CustomMouseEventArgs(Cell, 1)))"
+                    <img @oncontextmenu="@(() => ShowOrHide(
+                            new CellMouseEventArgs(Cell, 1)))"
                          @oncontextmenu:preventDefault="true"
-                         @onclick="() => ShowImage(Cell, 1)"
+                         @onclick="() => SolveCellAndNotify(Cell, 1)"
                          @onmouseover="() => ShowImageName(Cell, 1)"
                          src="@ImageFileName(Cell, 1)"
                          style="width:@SmallCellWidth;" />
                 }
                 else
                 {
-                    <div @oncontextmenu="@(() => ShowOrHide(new CustomMouseEventArgs(Cell, 1)))"
+                    <div @oncontextmenu="@(() => ShowOrHide(
+                            new CellMouseEventArgs(Cell, 1)))"
                          @oncontextmenu:preventDefault="true"
                          @onmouseover="() => ShowImageName(Cell, 1)"
-                         style="width:@SmallCellWidth;height:@SmallCellWidth;background-color:black;" />
+                         style="width:@SmallCellWidth;height:@SmallCellWidth;
+                            background-color:black;" />
                 }
             </td>
         </tr>
@@ -50,37 +56,43 @@ else
             <td>
                 @if (Cell.Possibilities[2])
                 {
-                    <img @oncontextmenu="@(() => ShowOrHide(new CustomMouseEventArgs(Cell, 2)))"
+                    <img @oncontextmenu="@(() => ShowOrHide(
+                            new CellMouseEventArgs(Cell, 2)))"
                          @oncontextmenu:preventDefault="true"
-                         @onclick="() => ShowImage(Cell, 2)"
+                         @onclick="() => SolveCellAndNotify(Cell, 2)"
                          @onmouseover="() => ShowImageName(Cell, 2)"
                          src="@ImageFileName(Cell, 2)"
                          style="width:@SmallCellWidth;" />
                 }
                 else
                 {
-                    <div @oncontextmenu="@(() => ShowOrHide(new CustomMouseEventArgs(Cell, 2)))"
+                    <div @oncontextmenu="@(() => ShowOrHide(
+                            new CellMouseEventArgs(Cell, 2)))"
                          @oncontextmenu:preventDefault="true"
                          @onmouseover="() => ShowImageName(Cell, 2)"
-                         style="width:@SmallCellWidth;height:@SmallCellWidth;background-color:black;" />
+                         style="width:@SmallCellWidth;height:@SmallCellWidth;
+                            background-color:black;" />
                 }
             </td>
             <td>
                 @if (Cell.Possibilities[3])
                 {
-                    <img @oncontextmenu="@(() => ShowOrHide(new CustomMouseEventArgs(Cell, 3)))"
+                    <img @oncontextmenu="@(() => ShowOrHide(
+                            new CellMouseEventArgs(Cell, 3)))"
                          @oncontextmenu:preventDefault="true"
-                         @onclick="() => ShowImage(Cell, 3)"
+                         @onclick="() => SolveCellAndNotify(Cell, 3)"
                          @onmouseover="() => ShowImageName(Cell, 3)"
                          src="@ImageFileName(Cell, 3)"
                          style="width:@SmallCellWidth;" />
                 }
                 else
                 {
-                    <div @oncontextmenu="@(() => ShowOrHide(new CustomMouseEventArgs(Cell, 3)))"
+                    <div @oncontextmenu="@(() => ShowOrHide(
+                            new CellMouseEventArgs(Cell, 3)))"
                          @oncontextmenu:preventDefault="true"
                          @onmouseover="() => ShowImageName(Cell, 3)"
-                         style="width:@SmallCellWidth;height:@SmallCellWidth;background-color:black;" />
+                         style="width:@SmallCellWidth;height:@SmallCellWidth;
+                            background-color:black;" />
                 }
             </td>
         </tr>
