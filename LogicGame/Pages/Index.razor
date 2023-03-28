@@ -4,7 +4,7 @@
 <br/>
 <br />
 <p>@ImageHint</p>
-<table style="float:left;margin-right:20px;background-color:red;">
+<table class="mainTable">
     @foreach (var cells in SortedCells)
     {
         <tr>
@@ -18,6 +18,9 @@
                         ImageHintChanged="OnImageHintChanged"/>
             </td>
             <td>
+                <span class="separatorSpan" style="height:@BigCellWidth;"></span>
+            </td>
+            <td>
                 <PuzzleCell BigCellWidth="@BigCellWidth"
                         Cell="@cells[1]"
                         Cells="@Cells"
@@ -27,6 +30,9 @@
                         ImageHintChanged="OnImageHintChanged"/>
             </td>
             <td>
+                <span class="separatorSpan" style="height:@BigCellWidth;"></span>
+            </td>
+            <td>
                 <PuzzleCell BigCellWidth="@BigCellWidth"
                         Cell="@cells[2]"
                         Cells="@Cells"
@@ -34,6 +40,9 @@
                         SortedCells="@SortedCells"
                         CellChanged="OnCellChanged"
                         ImageHintChanged="OnImageHintChanged"/>
+            </td>
+            <td>
+                <span class="separatorSpan" style="height:@BigCellWidth;"></span>
             </td>
             <td>
                 <PuzzleCell BigCellWidth="@BigCellWidth"
@@ -48,9 +57,9 @@
     }
 </table>
 <div>
-    <span style="font-weight:bold;">Hint Filter: </span>
+    <span class="boldSpan">Hint Filter: </span>
     <input id="hintFilter" @bind="HintFilter" @bind:event=oninput />
-    <canvas id="canvas" style="z-index:100;position:absolute;top:0;left:0;pointer-events:none; user-select: none;background-color:transparent; display:@CanvasDisplay;" />
+    <canvas id="canvas" style="display:@CanvasDisplay;" />
     <button @onclick="ClearHintFilter">x</button>
     @foreach (var hint in FilteredHints)
     {
