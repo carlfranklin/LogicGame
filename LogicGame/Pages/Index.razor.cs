@@ -495,6 +495,10 @@ public partial class Index : ComponentBase
         Hints = Hints.OrderBy(item => rnd.Next()).ToList();
     }
 
+    /// <summary>
+    /// Randomize the cells
+    /// </summary>
+    /// <returns></returns>
     protected async Task ShuffleCells()
     {
         // Copy Cells
@@ -541,6 +545,11 @@ public partial class Index : ComponentBase
         GenerateHints();
     }
 
+    /// <summary>
+    /// After the first render, set focus to the hintFilter <input> tag
+    /// </summary>
+    /// <param name="firstRender"></param>
+    /// <returns></returns>
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
@@ -551,6 +560,11 @@ public partial class Index : ComponentBase
 
     protected override async Task OnInitializedAsync()
     {
+        // Create the cells.
+        // Cells is a list of a list of cells.
+        // The outside list is rows.
+        // The inside list is columns.
+
         var row1 = new List<Cell>
         {
             new Cell("Carl", "carl.jpg", 0),
@@ -587,6 +601,7 @@ public partial class Index : ComponentBase
         };
         Cells.Add(row4);
 
+        // Randomize
         await ShuffleCells();
     }
 }
