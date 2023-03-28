@@ -50,7 +50,8 @@ public partial class Index : ComponentBase
 
     protected void OnImageHintChanged(string imageHint)
     {
-        ImageHint = imageHint;
+        if (!IsPuzleSolved())
+            ImageHint = imageHint;
     }
 
     private Hint GenerateThisNotThatClue()
@@ -273,6 +274,7 @@ public partial class Index : ComponentBase
         {
             Message = "Congratulations!! You did it!";
             CanvasDisplay = "block";
+            ImageHint = "Refresh the browser to play again.";
             await jSRuntime.InvokeVoidAsync("ExplodeConfetti");
         }
     }

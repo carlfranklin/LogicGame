@@ -51,7 +51,7 @@
     <span style="font-weight:bold;">Hint Filter: </span>
     <input id="hintFilter" @bind="HintFilter" @bind:event=oninput />
     <canvas id="canvas" style="z-index:100;position:absolute;top:0;left:0;pointer-events:none; user-select: none;background-color:transparent; display:@CanvasDisplay;" />
-    <button class="btn btn-danger" @onclick="ClearHintFilter">x</button>
+    <button @onclick="ClearHintFilter">x</button>
     @foreach (var hint in FilteredHints)
     {
         <div>

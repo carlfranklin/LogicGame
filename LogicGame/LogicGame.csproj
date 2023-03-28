@@ -10,10 +10,4 @@
     <PackageReference Include="blazored.modal" Version="7.1.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Update="wwwroot\css\confetti.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-
 </Project>
