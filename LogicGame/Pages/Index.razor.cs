@@ -1,31 +1,37 @@
 ﻿using LogicGame.Shared;
 using Microsoft.AspNetCore.Components;
+using Microsoft.JSInterop;
 using System.Security.Cryptography;
 
 namespace LogicGame.Pages;
 
 public partial class Index : ComponentBase
 {
-    public string Message { get; set; } = "Carl Franklin's Logic Puzzle";
-    public string ImageHint { get; set; } = "Hover over an image to see a description";
-    public List<List<Cell>> SortedCells { get; set; } = new List<List<Cell>>();
-    public List<List<Cell>> Cells { get; set; } = new List<List<Cell>>();
-    public List<Hint> Hints { get; set; } = new List<Hint>();
-    public List<Hint> FilteredHints => Hints.Where(i => i.HintText.ToLower().Contains(HintFilter.ToLower())).ToList();
+    protected string Message { get; set; } = "Carl Franklin's Logic Puzzle";
+    protected string ImageHint { get; set; } = "Hover over an image to see a description";
+    protected List<List<Cell>> SortedCells { get; set; } = new List<List<Cell>>();
+    protected List<List<Cell>> Cells { get; set; } = new List<List<Cell>>();
+    protected List<Hint> Hints { get; set; } = new List<Hint>();
+    protected List<Hint> FilteredHints => Hints.Where(i => i.HintText.ToLower().Contains(HintFilter.ToLower())).ToList();
 
-    public string BigCellWidth = "100px";
-    public string SmallCellWidth = "50px";
-    public string HintFilter = string.Empty;
+    protected string BigCellWidth = "100px";
+    protected string SmallCellWidth = "50px";
+    protected string HintFilter = string.Empty;
+    protected string CanvasDisplay { get; set; } = "none";
 
     [CascadingParameter]
     public IModalService Modal { get; set; } = default!;
 
-    public void ClearHintFilter()
+    [Inject]
+    public IJSRuntime jSRuntime { get; set; }
+
+    protected async Task ClearHintFilter()
     {
         HintFilter = "";
+        await jSRuntime.InvokeVoidAsync("SetFocus", "hintFilter");
     }
 
-    public async Task ShowHelp()
+    protected async Task ShowHelp()
     {
         ModalOptions options = new ModalOptions()
         {
@@ -37,9 +43,9 @@ public partial class Index : ComponentBase
         var result = await modal.Result;
     }
 
-    public void OnCellChanged(Cell cell)
+    protected async Task OnCellChanged(Cell cell)
     {
-        UpdateGameState();
+        await UpdateGameState();
     }
 
     protected void OnImageHintChanged(string imageHint)
@@ -193,7 +199,7 @@ public partial class Index : ComponentBase
         return hint;
     }
 
-    public int GetRandom(int[] notThese = null)
+    protected int GetRandom(int[] notThese = null)
     {
         int result = RandomNumberGenerator.GetInt32(1, SortedCells.Count + 1); ;
         if (notThese == null)
@@ -205,7 +211,7 @@ public partial class Index : ComponentBase
         return result;
     }
 
-    void UpdateGameState()
+    private async Task UpdateGameState()
     {
         foreach (var cellsList in SortedCells)
         {
@@ -266,6 +272,8 @@ public partial class Index : ComponentBase
         if (IsPuzleSolved())
         {
             Message = "Congratulations!! You did it!";
+            CanvasDisplay = "block";
+            await jSRuntime.InvokeVoidAsync("ExplodeConfetti");
         }
     }
 
@@ -280,21 +288,25 @@ public partial class Index : ComponentBase
         return true;
     }
 
-    public void GenerateHints()
+    protected void GenerateHints()
     {
-        while (Hints.Count < 20)
+        while (true)
         {
             var hint1 = GenerateSameColumnClue();
             if (hint1 != null) { Hints.Add(hint1); }
+            if (Hints.Count == 20) break;
 
             var hint2 = GenerateNextToClue();
             if (hint2 != null) { Hints.Add(hint2); }
+            if (Hints.Count == 20) break;
 
             var hint3 = GenerateBetweenClue();
             if (hint3 != null) { Hints.Add(hint3); }
+            if (Hints.Count == 20) break;
 
             var hint4 = GenerateThisNotThatClue();
             if (hint4 != null) { Hints.Add(hint4); }
+            if (Hints.Count == 20) break;
 
             if (hint1 == null && hint2 == null && hint3 == null && hint4 == null)
                 break;
@@ -303,7 +315,7 @@ public partial class Index : ComponentBase
         Hints = Hints.OrderBy(item => rnd.Next()).ToList();
     }
 
-    public void ShuffleCells()
+    protected async Task ShuffleCells()
     {
         // Copy Cells
         SortedCells = Cells.ToArray().ToList();
@@ -338,13 +350,21 @@ public partial class Index : ComponentBase
         imageRow2[x2 - 1].Possibilities = new bool[] { false, false, false, false };
         imageRow3[x3 - 1].Possibilities = new bool[] { false, false, false, false };
 
-        UpdateGameState();
+        await UpdateGameState();
 
         // Generate Hints
         GenerateHints();
     }
 
-    protected override void OnInitialized()
+    protected override async Task OnAfterRenderAsync (bool firstRender)
+    {
+        if (firstRender)
+        {
+            await jSRuntime.InvokeVoidAsync("SetFocus", "hintFilter");
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
     {
         var row1 = new List<Cell>
         {
@@ -382,6 +402,6 @@ public partial class Index : ComponentBase
         };
         Cells.Add(row4);
 
-        ShuffleCells();
+        await ShuffleCells();
     }
 }

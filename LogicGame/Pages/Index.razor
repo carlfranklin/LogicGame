@@ -1,9 +1,9 @@
 ﻿@page "/"
 <h3>@Message</h3>
-<p>@ImageHint</p>
 <button @onclick="ShowHelp" class="btn btn-primary">What is this?</button>
 <br/>
 <br />
+<p>@ImageHint</p>
 <table style="float:left;margin-right:20px;background-color:red;">
     @foreach (var cells in SortedCells)
     {
@@ -49,8 +49,9 @@
 </table>
 <div>
     <span style="font-weight:bold;">Hint Filter: </span>
-    <input @bind="HintFilter" @bind:event=oninput />
-    <button @onclick="ClearHintFilter">x</button>
+    <input id="hintFilter" @bind="HintFilter" @bind:event=oninput />
+    <canvas id="canvas" style="z-index:100;position:absolute;top:0;left:0;pointer-events:none; user-select: none;background-color:transparent; display:@CanvasDisplay;" />
+    <button class="btn btn-danger" @onclick="ClearHintFilter">x</button>
     @foreach (var hint in FilteredHints)
     {
         <div>

@@ -8,12 +8,13 @@ public class Hint
     public bool Checked { get; set; } = false;
     public bool ContainsCells(List<Cell> cells)
     {
+        int matchCount = 0;
         foreach (var cell in cells)
         {
             var match = (from x in Cells where x.Name == cell.Name select x).FirstOrDefault();
             if (match != null)
-                return true;
+                matchCount++;
         }
-        return false;
+        return (matchCount == cells.Count);
     }
 }
