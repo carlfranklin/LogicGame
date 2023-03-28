@@ -45,8 +45,8 @@ public partial class Index : ComponentBase
     /// <summary>
     /// Cell size (big and small). You can control the size of the UI with these
     /// </summary>
-    protected string BigCellWidth = "100px";
-    protected string SmallCellWidth = "48px";
+    protected string BigCellWidth = "101px";
+    protected string SmallCellWidth = "50px";
 
     /// <summary>
     /// Used to show and hide the canvas for the confetti
