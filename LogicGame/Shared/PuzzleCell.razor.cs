@@ -124,7 +124,7 @@ public partial class PuzzleCell: ComponentBase
 
     /// <summary>
     /// Helper method to show or hide one of the smaller images
-    /// using a custome CellMouseEventArgs class, which contains
+    /// using a custom CellMouseEventArgs class, which contains
     /// both a cell and a small image index
     /// </summary>
     /// <param name="args"></param>
