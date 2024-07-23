@@ -6,7 +6,7 @@ To play the game, go to https://logicgame.azurewebsites.net/
 
 If you're new to the game, select the **What is this?** button for quick instructions.
 
-Do yourself a favor and watch [BlazorTrain episode 95: Building a Logic Puzzle Game](https://youtu.be/JHH6Xm7xyao). Not only will I show you how to play the game, but I go into more detail about the code than I do in this document.
+Do yourself a favor and watch [BlazorTrain episode 95: Building a Logic Puzzle Game](https://youtu.be/gWXzn320j98). Not only will I show you how to play the game, but I go into more detail about the code than I do in this document.
 
 This is what it looks like when you first run the app:
 
@@ -18,7 +18,7 @@ When you select the **What is this?** button, you'll see this help dialog:
 
 Before you continue with the implementation, play the game a few times until it clicks. 
 
-> :point_up:	Watch the [BlazorTrain video](https://youtu.be/JHH6Xm7xyao). 
+> :point_up:	Watch the [BlazorTrain video](https://youtu.be/gWXzn320j98). 
 
 Let's build this app!
 
